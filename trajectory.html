@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<div class="slidecontainer">
+  <nobr>Angle <input type="range" min="0" max="90" value="50" class="slider" id="angle" oninput="redraw()"></nobr>
+  <nobr>Velocity <input type="range" min="0" max="1000" value="200" class="slider" id="velocity" oninput="redraw()"></nobr>
+  <nobr>Height <input type="range" min="0" max="1000" value="0" class="slider" id="starting" oninput="redraw()"></nobr>
+  <nobr>Gravity <input type="range" min="0" max="100" value="16" class="slider" id="gravity" oninput="redraw()"></nobr>
+  <nobr>Flight Time <input type="text" id="flight_time"></nobr>
+  <nobr>Distance <input type="text" id="distance"></nobr>
+</div>
+
+
+<canvas id="myCanvas" width="300" height="300" style="border:1px solid #d3d3d3;">
+Your browser does not support the HTML5 canvas tag.</canvas>
+
+<script>
+
+function redraw() {
+	var c = document.getElementById("myCanvas");
+	c.width = window.innerWidth - 100;
+	c.height = window.innerHeight - 100;
+	var ctx = c.getContext("2d");
+
+
+	var fps = document.getElementById("velocity").value;
+	var angle = document.getElementById("angle").value;
+	var starting = document.getElementById("starting").value;
+	var gravity = document.getElementById("gravity").value;
+    console.log(starting);
+	var radians = (angle * Math.PI) / 180;
+    
+	console.log(radians);
+
+	var x_factor = Math.cos(radians) * fps;
+	var y_factor = Math.sin(radians) * fps;
+
+    var flight_time = (-y_factor - Math.sqrt(y_factor**2 - 4 * -gravity * starting)) / (2 * -gravity);
+    var distance = x_factor * flight_time;
+    document.getElementById("flight_time").value = flight_time;
+    document.getElementById("distance").value = distance;
+
+	for (var t = 0; t < 100; t += 0.01) {
+		var x = x_factor * t;
+		var y = (c.height - ((y_factor * t) - (gravity * t**2)) - (starting));
+		ctx.fillRect(x,y,3,3); // fill in the pixel at (10,10)
+	}
+}
+
+redraw();
+</script> 
+
+</body>
+</html>
